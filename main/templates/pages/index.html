@@ -34,6 +34,14 @@
     <div class="col">
         <hr>
         <h4>Найти сниппет по номеру</h4>
+        <script>
+            function find() {
+                let value = snippet_id.value;
+                let url = '/snippets/' + String(value);
+                view_snippet_form.action = url;
+                view_snippet_form.submit();
+            }
+        </script>
         <form action='' id="view_snippet_form">
             <div class="form-group row">
                 <label for="snippet_id" class="col-sm-2 col-form-label col-form-label-lg">Номер:</label>
@@ -51,9 +59,4 @@
 </div>
 
 
-{% endblock %}
-
-{% block extra_js %}
-{% load static %}
-<script src="{% static 'main.js' %}"></script>
 {% endblock %}
