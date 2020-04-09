@@ -21,11 +21,15 @@
                         {{ addform.user.label }}: {{ addform.user }}
                     </div>
                 </div>
+                {% load pygmentify_tags %}
+                <link rel="stylesheet" href="{% pygmentify_css %}">
+                {% pygmentify %}
                 <div class="form-group row">
                     <div class="col">
-                        {{ addform.code.label }}: {{ addform.code }}
+                        <pre class="python">{{ addform.code.label }}: {{ addform.code }}</pre>
                     </div>
                 </div>
+                {% endpygmentify %}
             </fieldset>
         </form>
     </div>
