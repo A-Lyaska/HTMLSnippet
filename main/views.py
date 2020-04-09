@@ -32,6 +32,8 @@ def add_snippet_page(request):
                 name=addform.data['name'],
                 code=addform.data['code'],
                 creation_date=datetime.datetime.now(),
+                user = request.user.username if request.user.is_authenticated
+                     else None
             )
             record.save()
             id = record.id
@@ -43,7 +45,8 @@ def add_snippet_page(request):
     else:
         context['addform'] = AddSnippetForm(
             initial={
-                'user': 'AnonymousUser',
+                     'user': 'AnonymousUser' if not request.user.is_authenticated
+                     else request.user.username,
             }
         )
     return render(request, 'pages/add_snippet.html', context)
@@ -55,7 +58,7 @@ def view_snippet_page(request, id):
         record = Snippet.objects.get(id=id)
         context['addform'] = AddSnippetForm(
             initial={
-                'user': 'AnonymousUser',
+                'user': 'AnonymousUser' if not record.user else record.user,
                 'name': record.name,
                 'code': record.code,
             }
