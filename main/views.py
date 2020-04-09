@@ -3,6 +3,7 @@ import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect
 
@@ -32,8 +33,8 @@ def add_snippet_page(request):
                 name=addform.data['name'],
                 code=addform.data['code'],
                 creation_date=datetime.datetime.now(),
-                user = request.user.username if request.user.is_authenticated
-                     else None
+                user=request.user.username if request.user.is_authenticated
+                else None
             )
             record.save()
             id = record.id
@@ -45,8 +46,8 @@ def add_snippet_page(request):
     else:
         context['addform'] = AddSnippetForm(
             initial={
-                     'user': 'AnonymousUser' if not request.user.is_authenticated
-                     else request.user.username,
+                'user': 'AnonymousUser' if not request.user.is_authenticated
+                else request.user.username,
             }
         )
     return render(request, 'pages/add_snippet.html', context)
@@ -91,5 +92,25 @@ def logout_page(request):
     return redirect('index')
 
 
+@login_required
 def my_snippets_page(request):
-    raise NotImplementedError
+    context = {}
+    history = Snippet.objects.filter()
+    context['history'] = history
+    if request.method == 'POST':
+        addform = AddSnippetForm(request.POST)
+        if addform.is_valid():
+            name = addform.data['name'],
+            code = addform.data['code'],
+            creation_date = datetime.datetime.now(),
+            user = request.user.username if request.user.is_authenticated else None
+
+            item = Snippet(
+                creation_date=creation_date,
+                user=user,
+                name=name,
+                code=code,
+            )
+            item.save()
+
+    return render(request, 'sverst.html', context)
